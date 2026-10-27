@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ms"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Persamaan Linear"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#14284b"><title>Persamaan Linear</title>
+<!DOCTYPE html><html lang="ms"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Persamaan Linear"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#14284b"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><title>Persamaan Linear</title>
 <style>
 :root{
 --bg:#f3f5f9;
@@ -560,4 +560,5 @@ document.querySelectorAll('.dot').forEach(b=>b.onclick=()=>{COL=b.dataset.c;docu
 function showBar(v){$('bar').style.display=v?'flex':'none';$('bar2').style.display=v?'none':'flex';if(!v&&MODE)setMode(MODE)}
 $('hb').onclick=()=>showBar(false);$('sb').onclick=()=>showBar(true);
 if(ld('lg')=='en')LG='en';ui();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>
