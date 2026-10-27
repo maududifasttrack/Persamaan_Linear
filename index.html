@@ -1,0 +1,554 @@
+<!DOCTYPE html><html lang="ms"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Persamaan Linear"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#14284b"><title>Persamaan Linear</title>
+<style>
+:root{
+--bg:#f3f5f9;
+--card:#fff;
+--tx:#1b2438;
+--mu:#5d6b85;
+--ac:#f26b1d;
+--acd:#d9560c;
+--pink:#e4e9f3;
+--bd:#d5dbe8;
+--ok:#e5f8e8;
+--okt:#218739;
+--er:#d93636;
+box-sizing:border-box;
+padding-top:env(safe-area-inset-top,0px);
+padding-bottom:env(safe-area-inset-bottom,0px);
+}
+
+html{
+scroll-padding-top:env(safe-area-inset-top,0px);
+}
+
+body{
+margin:0;
+background:var(--bg);
+color:var(--tx);
+font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+overflow-x:hidden;
+}
+
+@keyframes wipeIn{
+from{transform:translateX(-25px);opacity:0}
+to{transform:translateX(0);opacity:1}
+}
+
+@keyframes wipeUp{
+from{transform:translateY(25px);opacity:0}
+to{transform:translateY(0);opacity:1}
+}
+
+.head{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+padding:16px max(18px,calc((100% - 920px) / 2 + 16px));
+flex-wrap:wrap;
+background:#14284b;
+border-bottom:3px solid var(--ac);
+}
+
+h1{
+font-size:20px;
+font-weight:600;
+color:#fff;
+margin:0;
+animation:wipeIn 1.5s ease;
+}
+
+main{
+position:relative;
+max-width:920px;
+margin:0 auto;
+padding:0 16px 90px;
+}
+
+#ink{
+position:absolute;
+left:0;
+top:0;
+width:100%;
+height:100%;
+overflow:visible;
+pointer-events:none;
+z-index:5;
+}
+
+#ink.on{
+pointer-events:auto;
+touch-action:pan-x pan-y pinch-zoom;
+-webkit-user-select:none;
+user-select:none;
+-webkit-touch-callout:none;
+cursor:crosshair;
+}
+
+#ink path{
+fill:none;
+stroke-linecap:round;
+stroke-linejoin:round;
+}
+
+.bar{
+position:fixed;
+left:50%;
+transform:translateX(-50%);
+bottom:calc(12px + env(safe-area-inset-bottom,0px));
+z-index:20;
+display:flex;
+gap:6px;
+align-items:center;
+justify-content:center;
+flex-wrap:wrap;
+max-width:calc(100% - 16px);
+padding:6px 8px;
+background:#14284b;
+border-radius:999px;
+box-shadow:0 6px 20px rgba(20,40,75,.35);
+}
+
+.bar button{
+padding:7px 12px;
+font-size:13px;
+border-radius:999px;
+background:transparent;
+color:#fff;
+}
+
+.bar button:hover:not(:disabled){
+background:rgba(255,255,255,.15);
+}
+
+.bar button.on,
+.bar button.on:hover:not(:disabled){
+background:var(--ac);
+}
+
+.bar .dot{
+width:22px;
+height:22px;
+padding:0;
+border:2px solid transparent;
+border-radius:50%;
+}
+
+.bar .dot:hover:not(:disabled){
+background:inherit;
+}
+
+.bar .dot.on{
+border-color:#fff;
+}
+
+.card{
+background:var(--card);
+border:1px solid rgba(20,40,75,.08);
+border-radius:22px;
+padding:16px;
+margin:14px 0;
+box-shadow:0 10px 30px rgba(20,40,75,.08);
+animation:wipeUp 1s ease;
+}
+
+#q{
+min-height:48px;
+font:600 22px/1.8 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+padding:8px 12px;
+border:1px solid var(--bd);
+border-radius:14px;
+background:var(--card);
+color:var(--tx);
+outline:none;
+overflow-x:auto;
+white-space:pre-wrap;
+box-sizing:border-box;
+}
+
+#q:focus{
+border-color:var(--ac);
+box-shadow:0 0 0 2px rgba(242,107,29,.2);
+}
+
+#q .fr>span{
+min-width:.7em;
+background:var(--pink);
+border-radius:3px;
+}
+
+button{
+margin:0;
+padding:10px 16px;
+border:0;
+border-radius:12px;
+background:var(--ac);
+color:#fff;
+font-family:inherit;
+font-size:14px;
+font-weight:600;
+cursor:pointer;
+transition:.2s ease;
+}
+
+button:hover:not(:disabled){
+background:var(--acd);
+}
+
+button:disabled{
+opacity:.4;
+cursor:default;
+}
+
+.small{
+padding:7px 14px;
+font-size:13px;
+border-radius:999px;
+}
+
+.alt{
+background:var(--card);
+color:#14284b;
+border:1px solid rgba(242,107,29,.45);
+}
+
+.alt:hover:not(:disabled){
+background:var(--pink);
+}
+
+.alt.on,
+.alt.on:hover:not(:disabled){
+background:var(--ac);
+color:#fff;
+border-color:var(--ac);
+}
+
+.tabs{
+display:flex;
+padding:4px;
+gap:2px;
+margin-bottom:12px;
+background:var(--pink);
+border-radius:999px;
+}
+
+.tabs button{
+flex:1;
+border-radius:999px;
+background:transparent;
+color:var(--mu);
+padding:8px 14px;
+font-weight:500;
+}
+
+.tabs button:hover:not(:disabled){
+background:transparent;
+}
+
+.tabs button.on,
+.tabs button.on:hover:not(:disabled){
+background:var(--ac);
+color:#fff;
+}
+
+.seg{
+display:inline-flex;
+padding:4px;
+gap:2px;
+background:var(--pink);
+border-radius:999px;
+}
+
+.seg button{
+border-radius:999px;
+background:transparent;
+color:var(--mu);
+padding:6px 14px;
+font-size:13px;
+font-weight:500;
+}
+
+.seg button:hover:not(:disabled){
+background:transparent;
+}
+
+.seg button.on,
+.seg button.on:hover:not(:disabled){
+background:var(--ac);
+color:#fff;
+}
+
+.tools{
+display:flex;
+align-items:center;
+gap:10px;
+flex-wrap:wrap;
+}
+
+#zv{
+min-width:52px;
+}
+
+.grp{
+border:1px solid var(--bd);
+border-radius:14px;
+padding:12px;
+margin:0 0 12px;
+}
+
+.hd{
+display:none!important;
+}
+
+.row{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+margin:8px 0;
+}
+
+.eq{
+font-size:22px;
+padding:4px 0;
+font-family:inherit;
+font-weight:600;
+overflow-x:auto;
+}
+
+.fr{
+display:inline-flex;
+flex-direction:column;
+vertical-align:middle;
+text-align:center;
+margin:0 3px;
+font-size:.9em;
+line-height:1.3;
+}
+
+.fr>span:first-child{
+border-bottom:1.5px solid currentColor;
+padding:0 4px;
+}
+
+.fr>span:last-child{
+padding:0 4px;
+}
+
+.st{
+color:var(--mu);
+font-size:14px;
+}
+
+.ans{
+background:var(--ok);
+color:var(--okt);
+border-color:rgba(33,135,57,.25);
+}
+
+.ans .st{
+color:var(--okt);
+}
+
+.err{
+color:var(--er);
+}
+
+@media (max-width:480px){
+.card{
+padding:14px;
+border-radius:18px;
+}
+
+.eq,
+#q{
+font-size:19px;
+}
+}
+</style></head><body>
+<div class="head"><h1 id="ti">Persamaan Linear</h1><div class="tools"><div class="seg" id="segzoom"><button type="button" id="zo" aria-label="Zoom out">−</button><button type="button" id="zv" aria-label="Reset zoom">100%</button><button type="button" id="zi" aria-label="Zoom in">+</button></div><div class="seg" id="seglang"><button type="button" data-v="ms">BM</button><button type="button" data-v="en">ENG</button></div></div></div>
+<main>
+<svg id="ink" xmlns="http://www.w3.org/2000/svg"></svg>
+
+<div class="card">
+<div class="tabs"><button id="t0" class="on"></button><button id="t1"></button></div>
+<div id="p0" class="row"><button id="bf" class="alt"></button></div>
+<div id="p1" class="grp hd"><div class="st" id="lt"></div><div class="row"><button class="lb small alt on"></button><button class="lb small alt"></button><button class="lb small alt"></button></div></div>
+<div id="q" contenteditable="true" spellcheck="false" autocapitalize="off"></div>
+
+
+<div class="row"><button class="p" id="go"></button></div>
+
+</div>
+<div id="out"></div>
+</main>
+<div class="bar" id="bar"><button type="button" id="pn"></button><button type="button" class="dot on" data-c="#e53935" style="background:#e53935" aria-label="Merah"></button><button type="button" class="dot" data-c="#2f7bff" style="background:#2f7bff" aria-label="Biru"></button><button type="button" class="dot" data-c="#22b04b" style="background:#22b04b" aria-label="Hijau"></button><button type="button" id="er"></button><button type="button" id="un"></button><button type="button" id="cl"></button><button type="button" id="hb"></button></div>
+<div class="bar" id="bar2" style="display:none"><button type="button" id="sb"></button></div>
+<script>
+let s='',p0=0,V='x',LT=new Set();
+const gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
+class F{constructor(n,d=1){if(d<0){n=-n;d=-d}const g=gcd(n,d)||1;this.n=n/g;this.d=d/g}
+add(o){return new F(this.n*o.d+o.n*this.d,this.d*o.d)}neg(){return new F(-this.n,this.d)}sub(o){return this.add(o.neg())}
+mul(o){return new F(this.n*o.n,this.d*o.d)}div(o){return new F(this.n*o.d,this.d*o.n)}z(){return this.n===0}}
+const N=v=>({t:'n',v:v instanceof F?v:new F(v)}),X={t:'x'};
+const fr=(a,b)=>`<span class="fr"><span>${a}</span><span>${b}</span></span>`;
+const num=v=>v.d==1?(v.n<0?'−'+-v.n:''+v.n):(v.n<0?'−':'')+fr(Math.abs(v.n),v.d);
+function norm(t){t=t.replace(/\\left|\\right|\\,|\s/g,'').replace(/\\cdot|\\times|[×·∗]/g,'*').replace(/[−–]/g,'-').replace(/÷/g,'/');
+let q;while((q=t.replace(/\\[dt]?frac\{([^{}]*)\}\{([^{}]*)\}/g,'(($1)/($2))'))!==t)t=q;
+return t.replace(/[{}]/g,m=>m=='{'?'(':')')}
+function parseE(str){s=str;p0=0;const pk=()=>s[p0];
+function expr(){let a=term();while(pk()=='+'||pk()=='-'){const o=s[p0++];a={t:o=='+'?'add':'sub',a,b:term()}}return a}
+function term(){let a=un();for(;;){const c=pk();if(c=='*'||c=='/'){p0++;a={t:c=='*'?'mul':'div',a,b:un()}}else if(c&&/[a-zA-Z(]/.test(c))a={t:'mul',a,b:fac()};else break}return a}
+function un(){if(pk()=='-'){p0++;return{t:'neg',a:un()}}if(pk()=='+'){p0++;return un()}return fac()}
+function fac(){const c=pk();
+if(c&&/[\d.]/.test(c)){const j=p0;while(/[\d.]/.test(s[p0]||''))p0++;const t=s.slice(j,p0),q=t.split('.');if(q.length>2||t=='.')throw Error('Nombor tidak sah');return N(new F(+q.join(''),10**(q[1]||'').length))}
+if(c&&/[a-zA-Z]/.test(c)){p0++;LT.add(c);return X}
+if(c=='('){p0++;const e=expr();if(pk()!=')')throw Error('Kurungan tidak lengkap');p0++;return e}
+throw Error('Persamaan tidak lengkap atau simbol tidak dikenali')}
+const e=expr();if(p0<s.length)throw Error('Simbol tidak dijangka "'+s[p0]+'". Hanya persamaan linear satu pemboleh ubah disokong');return e}
+function P(n,c=0){switch(n.t){
+case'n':return num(n.v);case'x':return V;
+case'grp':return n.a.t=='n'||n.a.t=='x'?P(n.a):'('+P(n.a)+')';
+case'neg':{const t='−'+P(n.a,2);return c>=3?'('+t+')':t}
+case'add':case'sub':{const r=n.b.t=='neg'?'('+P(n.b)+')':P(n.b,n.t=='sub'?2:1),t=P(n.a,1)+(n.t=='add'?' + ':' − ')+r;return c>=2?'('+t+')':t}
+case'mul':{const t=P(n.a,2)+(n.b.t=='n'?' × ':'')+P(n.b,3);return c>=3?'('+t+')':t}
+case'div':return fr(P(n.a),P(n.b))}}
+const negT=t=>({c:t.c.neg(),k:t.k});
+function merge(ts){const m={};ts.forEach(t=>m[t.k]=(m[t.k]||new F(0)).add(t.c));return Object.keys(m).map(Number).sort((a,b)=>b-a).filter(k=>!m[k].z()).map(k=>({c:m[k],k}))}
+function den(b){const d=merge(ex(b));if(d.some(t=>t.k>0))throw Error('Penyebut mesti nombor (tiada pemboleh ubah)');if(!d.length)throw Error('Penyebut sifar');return d[0].c}
+function ex(n){switch(n.t){
+case'n':return[{c:n.v,k:0}];case'x':return[{c:new F(1),k:1}];case'grp':return ex(n.a);
+case'add':return ex(n.a).concat(ex(n.b));case'sub':return ex(n.a).concat(ex(n.b).map(negT));case'neg':return ex(n.a).map(negT);
+case'mul':{const r=[];for(const p of ex(n.a))for(const q of ex(n.b))r.push({c:p.c.mul(q.c),k:p.k+q.k});return r}
+case'div':{const d=den(n.b);return ex(n.a).map(t=>({c:t.c.div(d),k:t.k}))}}}
+function tH(ts){if(!ts.length)return'0';return ts.map((t,j)=>{const ng=t.c.n<0,a=new F(Math.abs(t.c.n),t.c.d);let b;
+if(t.k==0)b=num(a);else if(a.d==1)b=(a.n==1?'':a.n)+V;else b=a.n==1?fr(V,a.d):fr(a.n,a.d)+V;
+return j?(ng?' − ':' + ')+b:(ng?'−':'')+b}).join('')}
+const hasDiv=n=>!!(n.t=='div'||(n.a&&hasDiv(n.a))||(n.b&&hasDiv(n.b)));
+const isSum=n=>n.t=='add'||n.t=='sub';
+function hasBr(n){if(n.t=='mul')return isSum(n.a)||isSum(n.b)||(n.a.t=='neg'&&isSum(n.a.a))||(n.b.t=='neg'&&isSum(n.b.a))||hasBr(n.a)||hasBr(n.b);
+if(n.t=='neg')return isSum(n.a)||hasBr(n.a);if(n.t=='sub')return isSum(n.b)||hasBr(n.a)||hasBr(n.b);
+if(n.t=='add'||n.t=='div')return hasBr(n.a)||hasBr(n.b);if(n.t=='grp')return hasBr(n.a);return false}
+function dens(n,o=[]){if(n.a)dens(n.a,o);if(n.b)dens(n.b,o);if(n.t=='div'){const d=den(n.b);if(d.d!=1)throw Error('Penyebut mesti nombor bulat');o.push(Math.abs(d.n))}return o}
+function mk(c,k){const a=new F(Math.abs(c.n),c.d),b=k==0?N(a):(a.n==1&&a.d==1?X:{t:'mul',a:N(a),b:X});return c.n<0?{t:'neg',a:b}:b}
+function sc(n,L){if(L===1)return n;switch(n.t){
+case'n':return N(n.v.mul(new F(L)));
+case'add':case'sub':return{t:n.t,a:sc(n.a,L),b:sc(n.b,L)};
+case'neg':return{t:'neg',a:sc(n.a,L)};
+case'div':{const d=den(n.b);if(d.d==1&&L%d.n===0)return sc(n.a,L/d.n);return{t:'mul',a:N(L),b:{t:'grp',a:n}}}
+case'mul':if(hasDiv(n.b))return{t:'mul',a:n.a,b:sc(n.b,L)};if(hasDiv(n.a))return{t:'mul',a:sc(n.a,L),b:n.b};
+if(n.a.t=='n')return{t:'mul',a:N(n.a.v.mul(new F(L))),b:n.b};
+default:{const t=merge(ex(n));if(t.length==1)return mk(t[0].c.mul(new F(L)),t[0].k);return{t:'mul',a:N(L),b:{t:'grp',a:n}}}}}
+function ev(n,x){switch(n.t){case'n':return n.v;case'x':return x;case'grp':return ev(n.a,x);case'neg':return ev(n.a,x).neg();
+case'add':return ev(n.a,x).add(ev(n.b,x));case'sub':return ev(n.a,x).sub(ev(n.b,x));case'mul':return ev(n.a,x).mul(ev(n.b,x));case'div':return ev(n.a,x).div(ev(n.b,x))}}
+const E=(l,r)=>`<div class="eq">${P(l)} = ${P(r)}</div>`;
+const T=(l,r)=>`<div class="eq">${tH(l)} = ${tH(r)}</div>`;
+function prs(src){const p=norm(src).split('=');if(p.length!=2||!p[0]||!p[1])throw Error('Masukkan satu persamaan dengan satu tanda =');
+LT=new Set();const l=parseE(p[0]),r=parseE(p[1]);if(LT.size>1)throw Error('Gunakan satu pemboleh ubah sahaja (cth. x)');V=[...LT][0]||'x';return[l,r]}
+const SUP='⁰¹²³⁴⁵⁶⁷⁸⁹',sup=n=>String(n).split('').map(d=>SUP[d]).join('');
+const nonLin=ts=>{const k=Math.max(...ts.map(t=>t.k));if(k>1)throw Error('Ini bukan persamaan linear (ada kuasa '+V+sup(k)+')')};
+function solve(src){let[l,r]=prs(src);nonLin([...ex(l),...ex(r)]);const L0=l,R0=r,S=[];let last=E(l,r);S.push(['Soalan',last]);
+if(hasBr(l)||hasBr(r)){let lt=ex(l),rt=ex(r);nonLin(merge(lt).concat(merge(rt)));
+last=T(lt,rt);S.push(['Kembangkan kurungan',last]);
+const L=[...lt,...rt].reduce((a,t)=>a/gcd(a,t.c.d)*t.c.d,1);
+if(L>1){const wr=ts=>ts.length==1&&ts[0].k==0&&ts[0].c.d==1?`${L} × ${tH(ts)}`:`${L}(${tH(ts)})`;const m=`<div class="eq">${wr(lt)} = ${wr(rt)}</div>`;
+const sf=ts=>ts.map(t=>({c:t.c.mul(new F(L)),k:t.k}));lt=sf(lt);rt=sf(rt);last=T(lt,rt);S.push([`Hapuskan pecahan: darab kedua-dua belah dengan ${L} (GSTK bagi penyebut)`,m+last])}
+const tA=ts=>ts.reduce((a,t,j)=>j?(t.c.n<0?{t:'sub',a,b:mk(t.c.neg(),t.k)}:{t:'add',a,b:mk(t.c,t.k)}):mk(t.c,t.k),null)||N(0);
+l=tA(lt);r=tA(rt)}
+let g=0;while((hasDiv(l)||hasDiv(r))&&g++<3){const ds=[...dens(l),...dens(r)],L=ds.reduce((a,b)=>a/gcd(a,b)*b,1);if(L<2)throw Error('Pecahan tidak dapat dihapuskan');
+const m=`<div class="eq">${L}(${P(l)}) = ${L}(${P(r)})</div>`;l=sc(l,L);r=sc(r,L);last=E(l,r);
+S.push([`Hapuskan pecahan: darab kedua-dua belah dengan ${L} (GSTK bagi penyebut)`,m+last])}
+if(hasDiv(l)||hasDiv(r))throw Error('Pecahan terlalu kompleks untuk dihapuskan');
+const br=hasBr(l)||hasBr(r);let lt=ex(l),rt=ex(r),ml=merge(lt),mr=merge(rt);
+nonLin([...ml,...mr]);
+if(br){last=T(lt,rt);S.push(['Kembangkan kurungan',last])}
+if(ml.length+mr.length<lt.length+rt.length){last=T(ml,mr);S.push(['Kumpulkan sebutan serupa',last])}
+const co=(ts,k)=>(ts.find(t=>t.k==k)||{c:new F(0)}).c,a=co(ml,1),b=co(ml,0),c=co(mr,1),d=co(mr,0);
+const fl=!c.z()&&a.sub(c).n<0;if(fl?(!a.z()||!d.z()):(!c.z()||!b.z())){const Lt=[],Rt=[];if(fl){if(!b.z())Lt.push({c:b,k:0});if(!d.z())Lt.push({c:d.neg(),k:0});if(!c.z())Rt.push({c:c,k:1});if(!a.z())Rt.push({c:a.neg(),k:1})}else{if(!a.z())Lt.push({c:a,k:1});if(!c.z())Lt.push({c:c.neg(),k:1});if(!d.z())Rt.push({c:d,k:0});if(!b.z())Rt.push({c:b.neg(),k:0})}
+last=T(Lt,Rt);S.push([fl?'Pindahkan sebutan x ke kanan dan nombor ke kiri (tukar tanda)':'Pindahkan sebutan x ke kiri dan nombor ke kanan (tukar tanda)',last])}
+const A=fl?c.sub(a):a.sub(c),B=fl?b.sub(d):d.sub(b),sl=fl?T(B.z()?[]:[{c:B,k:0}],A.z()?[]:[{c:A,k:1}]):T(A.z()?[]:[{c:A,k:1}],B.z()?[]:[{c:B,k:0}]);
+if(sl!==last){last=sl;S.push(['Ringkaskan',sl])}
+let ans;
+if(A.z()){ans=B.z()?'Benar untuk semua nilai '+V+' (identiti)':'Tiada penyelesaian'}
+else{const val=B.div(A),dv=P({t:'div',a:N(B),b:N(A)});
+if(!(A.n==1&&A.d==1)){S.push([`Bahagi kedua-dua belah dengan ${num(A)}`,`<div class="eq">${V} = ${dv}</div>`]);if(dv!==num(val))S.push(['Ringkaskan',`<div class="eq">${V} = ${num(val)}</div>`])}
+let dd=val.d;while(dd%2==0)dd/=2;while(dd%5==0)dd/=5;
+ans=`${V} = ${num(val)}`+(val.d!=1?` <span class="st">(${dd==1?'=':'≈'} ${parseFloat((val.n/val.d).toFixed(4))})</span>`:'');
+const kl=ev(L0,val),kr=ev(R0,val);S.push(['Semakan',`<div class="st">Gantikan ${V} = ${num(val)}: kiri = ${num(kl)}, kanan = ${num(kr)} ${kl.sub(kr).z()?'✓':'✗'}</div>`])}
+return{S,ans}}
+const $=id=>document.getElementById(id),q=$('q');
+const ZW='\u200b';
+function ser(el){let o='';el.childNodes.forEach(c=>{if(c.nodeType==3)o+=c.textContent.replace(/\u200b/g,'');else if(c.classList&&c.classList.contains('fr'))o+='(('+ser(c.children[0])+')/('+ser(c.children[1])+'))';else if(c.nodeName!='BR')o+=ser(c)});return o}
+function mkFr(a,b){const f=document.createElement('span');f.className='fr';[a,b].forEach(t=>{const sp=document.createElement('span');sp.append(ZW);fill(sp,t);f.append(sp)});return f}
+function fill(el,str){let i=0;const blk=k=>{let d=1,a=k;while(d&&k<str.length){if(str[k]=='{')d++;if(str[k]=='}')d--;k++}return[str.slice(a,k-1),k]};
+while(i<str.length){const j=str.indexOf('\\frac{',i);if(j<0){el.append(str.slice(i));break}el.append(str.slice(i,j));const[n,k]=blk(j+6),[d,e]=blk(k+1);el.append(mkFr(n,d));i=e;el.append(ZW)}}
+function setCaret(n,o){const r=document.createRange();r.setStart(n,o);r.collapse(true);const s=getSelection();s.removeAllRanges();s.addRange(r)}
+function place(){const s=getSelection();if(!s.rangeCount||!q.contains(s.anchorNode)){q.focus();const r=document.createRange();r.selectNodeContents(q);r.collapse(false);s.removeAllRanges();s.addRange(r)}return s.getRangeAt(0)}
+function run(){clearInk();try{const{S,ans}=solve(ser(q));$('out').innerHTML=tr(S.map((x,j)=>`<div class="card"><div class="st">${j+1}. ${x[0]}</div>${x[1]}</div>`).join('')+`<div class="card ans"><div class="st">Jawapan</div><div class="eq">${ans}</div></div>`)}
+catch(e){$('out').innerHTML=`<div class="card err">${tr(e.message)}</div>`}}
+function insT(t,o){const r=place();r.deleteContents();const n=document.createTextNode(t);r.insertNode(n);setCaret(n,o)}
+function insF(){const r=place();r.deleteContents();const f=mkFr('',''),af=document.createTextNode(ZW);r.insertNode(af);r.insertNode(f);setCaret(f.children[0].firstChild,1)}
+$('bf').onclick=insF;
+document.querySelectorAll('button').forEach(b=>b.onmousedown=e=>e.preventDefault());
+$('go').onclick=run;
+q.onkeydown=e=>{if(e.key=='Enter'){e.preventDefault();run()}
+if(e.key=='Tab'){const a=getSelection().anchorNode,sp=a&&(a.nodeType==3?a.parentNode:a).closest('.fr>span');if(sp){e.preventDefault();const f=sp.parentNode;if(sp==f.children[0])setCaret(f.children[1].firstChild,1);else{let nx=f.nextSibling;if(!nx||nx.nodeType!=3){nx=document.createTextNode(ZW);f.after(nx)}setCaret(nx,Math.min(1,nx.length))}}}};
+q.onpaste=e=>{e.preventDefault();const t=e.clipboardData.getData('text/plain').replace(/\s+/g,' '),r=place();r.deleteContents();const fg=document.createDocumentFragment();fill(fg,t);const last=fg.lastChild;r.insertNode(fg);if(last){const rr=document.createRange();rr.setStartAfter(last);rr.collapse(true);const s=getSelection();s.removeAllRanges();s.addRange(rr)}};
+let LG='ms';
+const TR=[['Soalan','Question'],[/Hapuskan pecahan: darab kedua-dua belah dengan (\d+) \(GSTK bagi penyebut\)/g,'Eliminate fractions: multiply both sides by $1 (LCM of denominators)'],['Kembangkan kurungan','Expand brackets'],['Kumpulkan sebutan serupa','Collect like terms'],['Pindahkan sebutan x ke kanan dan nombor ke kiri (tukar tanda)','Move x terms to the right and numbers to the left (change sign)'],['Pindahkan sebutan x ke kiri dan nombor ke kanan (tukar tanda)','Move x terms to the left and numbers to the right (change sign)'],['Ringkaskan','Simplify'],['Bahagi kedua-dua belah dengan','Divide both sides by'],['Semakan','Check'],['Gantikan','Substitute'],['kiri =','left ='],['kanan =','right ='],['Jawapan','Answer'],['Benar untuk semua nilai ','True for all values of '],['(identiti)','(identity)'],['Tiada penyelesaian','No solution'],['Nombor tidak sah','Invalid number'],['Kurungan tidak lengkap','Unclosed bracket'],['Persamaan tidak lengkap atau simbol tidak dikenali','Incomplete equation or unknown symbol'],['Simbol tidak dijangka','Unexpected symbol'],['Hanya persamaan linear satu pemboleh ubah disokong','Only linear equations in one variable are supported'],['Penyebut mesti nombor (tiada pemboleh ubah)','Denominator must be a number (no variable)'],['Penyebut sifar','Denominator is zero'],['Penyebut mesti nombor bulat','Denominator must be a whole number'],['Masukkan satu persamaan dengan satu tanda =','Enter one equation with one = sign'],['Gunakan satu pemboleh ubah sahaja (cth. x)','Use only one variable (e.g. x)'],['Pecahan tidak dapat dihapuskan','Fractions cannot be eliminated'],['Pecahan terlalu kompleks untuk dihapuskan','Fractions are too complex to eliminate'],[/Ini bukan persamaan linear \(ada kuasa (\S+)\)/g,'This is not a linear equation (it contains $1)']];
+const tr=s=>LG=='ms'?s:TR.reduce((a,[m,e])=>typeof m=='string'?a.split(m).join(e):a.replace(m,e),s);
+const UI={ms:{ti:'Persamaan Linear',bf:'Pecahan',go:'Selesaikan',t0:'Taip Soalan',t1:'Soalan Rawak',lt:'Pilih tahap:',lv:['Mudah','Sederhana','Sukar'],pn:'Conteng',er:'Padam',un:'Undo',cl:'Kosongkan',hb:'Sembunyi',sb:'Conteng'},en:{ti:'Linear Equations',bf:'Fraction',go:'Solve',t0:'Type a Question',t1:'Random Question',lt:'Choose level:',lv:['Easy','Medium','Hard'],pn:'Draw',er:'Erase',un:'Undo',cl:'Clear',hb:'Hide',sb:'Draw'}};
+function ui(){const u=UI[LG],d=document.documentElement;$('ti').textContent=u.ti;document.title=u.ti;$('bf').textContent=u.bf;$('go').textContent=u.go;document.querySelectorAll('#seglang button').forEach(b=>b.classList.toggle('on',b.dataset.v==LG));$('t0').textContent=u.t0;$('t1').textContent=u.t1;$('lt').textContent=u.lt;document.querySelectorAll('.lb').forEach((b,i)=>b.textContent=u.lv[i]);['pn','er','un','cl','hb','sb'].forEach(k=>$(k).textContent=u[k]);d.lang=LG}
+const sv=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},ld=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+$('seglang').onclick=e=>{const v=e.target.dataset&&e.target.dataset.v;if(v){LG=v;sv('lg',LG);ui();if($('out').innerHTML)run()}};
+const ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),pk=a=>a[ri(0,a.length-1)],nz=(a,b)=>{let v=0;while(!v)v=ri(a,b);return v};
+const sg=b=>b>0?'+'+b:''+b,cx=a=>a==1?'x':a==-1?'-x':a+'x',lin=(a,b)=>cx(a)+(b?sg(b):''),fc=(n,d)=>`\\frac{${n}}{${d}}`;
+const GEN=[[
+()=>{const x=nz(-9,12),b=ri(1,12);return pk([`x+${b}=${x+b}`,`x-${b}=${x-b}`])},
+()=>{const a=ri(2,9),x=nz(-9,9);return `${a}x=${a*x}`},
+()=>{const a=ri(2,9),b=nz(-12,12),x=nz(-9,9);return `${lin(a,b)}=${a*x+b}`}],[
+()=>{const a=ri(2,6),b=nz(-9,9),x=ri(-8,10);return `${a}(x${sg(b)})=${a*(x+b)}`},
+()=>{const a=ri(2,9),c=ri(1,a-1),b=nz(-9,9),x=nz(-8,10);return `${lin(a,b)}=${lin(c,a*x+b-c*x)}`},
+()=>{const a=ri(2,6),b=nz(-8,8),x=nz(-8,9);let c=ri(1,8);if(c==a)c++;return `${a}(x${sg(b)})=${lin(c,a*(x+b)-c*x)}`},
+()=>{const n=ri(2,6),k=nz(-6,8),b=nz(-9,9);return `${fc('x',n)}${sg(b)}=${k+b}`},
+()=>{const n=ri(2,6),b=nz(-9,9),c=nz(-6,8);return `${fc('x'+sg(b),n)}=${c}`}],[
+()=>{const a=ri(2,5),b=ri(1,9),p=ri(1,9),q=ri(2,6);return `${a}(${b}-x)=${fc(p,q)}x`},
+()=>{const a=ri(2,5),b=nz(-9,9),n=ri(2,6),c=nz(-6,9);return `${fc(lin(a,b),n)}=${c}`},
+()=>{const m=ri(2,5),n=ri(m+1,7),a=nz(-6,6),b=nz(-6,6),c=nz(-4,4);return `${fc('x'+sg(a),m)}=${fc('x'+sg(b),n)}${sg(c)}`},
+()=>{const a=ri(2,6),c=ri(2,6),b=nz(-8,8),d=nz(-8,8);return `${a}(x${sg(b)})=${a==c?c+1:c}(x${sg(d)})`},
+()=>{const a=ri(2,5),n=ri(2,5),b=nz(-6,6),c=nz(-9,9);return `${a}(${fc('x',n)}${sg(b)})=${c}`}]];
+function rnd(){const g=GEN[LV];let s0;for(let i=0;i<40;i++){s0=pk(g)();try{const a=solve(s0).ans.replace(/<span class="st">.*<\/span>/,'');if(!/^(Benar|Tiada)/.test(a)&&(a.match(/\d+/g)||[]).every(n=>n.length<4))break}catch(e){}}
+clearInk();q.innerHTML='';fill(q,s0);$('out').innerHTML=''}
+let LV=0;
+function mode(m){$('t0').classList.toggle('on',m==0);$('t1').classList.toggle('on',m==1);$('p0').classList.toggle('hd',m==1);$('p1').classList.toggle('hd',m==0);q.contentEditable=m==0?'true':'false';clearInk();q.innerHTML='';$('out').innerHTML='';if(m)rnd()}
+$('t0').onclick=()=>mode(0);$('t1').onclick=()=>mode(1);
+document.querySelectorAll('.lb').forEach((b,i)=>b.onclick=()=>{LV=i;document.querySelectorAll('.lb').forEach((x,j)=>x.classList.toggle('on',j==i));rnd()});
+let ZM=parseInt(ld('zm'))||100;
+function zoom(v){ZM=Math.max(100,Math.min(200,v));document.querySelector('main').style.zoom=ZM/100;$('zv').textContent=ZM+'%';$('zo').disabled=ZM<=100;$('zi').disabled=ZM>=200;sv('zm',ZM)}
+$('zi').onclick=()=>zoom(ZM+25);$('zo').onclick=()=>zoom(ZM-25);$('zv').onclick=()=>zoom(100);
+zoom(ZM);
+let INK=[],MODE=null,COL='#e53935',cur=null;
+const ink=$('ink'),NS='http://www.w3.org/2000/svg',mainEl=document.querySelector('main');
+function ipt(e){const r=mainEl.getBoundingClientRect(),k=ZM/100;return[(e.clientX-r.left)/k,(e.clientY-r.top)/k]}
+function upd(s){let d='M'+s.p.map(a=>a[0].toFixed(1)+' '+a[1].toFixed(1)).join('L');if(s.p.length==1)d+='l0.1 0';s.el.setAttribute('d',d)}
+function erase(p){INK=INK.filter(s=>{const h=s.p.some(a=>Math.hypot(a[0]-p[0],a[1]-p[1])<12);if(h)s.el.remove();return!h})}
+function clearInk(){INK.forEach(s=>s.el.remove());INK=[]}
+function setMode(m){MODE=MODE==m?null:m;ink.classList.toggle('on',!!MODE);$('pn').classList.toggle('on',MODE=='pn');$('er').classList.toggle('on',MODE=='er')}
+let pid=null,penDown=false;
+ink.onpointerdown=e=>{if(!MODE||e.pointerType=='touch'||pid!==null)return;e.preventDefault();pid=e.pointerId;penDown=true;ink.setPointerCapture(e.pointerId);const p=ipt(e);
+if(MODE=='er'){cur='er';erase(p);return}
+const el=document.createElementNS(NS,'path');el.setAttribute('stroke',COL);el.setAttribute('stroke-width',3);ink.append(el);
+cur={p:[p],el};upd(cur);INK.push(cur)};
+ink.onpointermove=e=>{if(!cur||e.pointerId!==pid)return;const p=ipt(e);if(cur=='er')erase(p);else{cur.p.push(p);upd(cur)}};
+ink.onpointerup=ink.onpointercancel=e=>{if(e.pointerId!==pid)return;cur=null;pid=null;penDown=false};
+const isPen=t=>t.touchType=='stylus';
+ink.addEventListener('touchstart',e=>{if(!MODE)return;if(penDown||[...e.changedTouches].some(isPen))e.preventDefault()},{passive:false});
+ink.addEventListener('touchmove',e=>{if(!MODE)return;if(penDown||[...e.changedTouches].some(isPen))e.preventDefault()},{passive:false});
+ink.addEventListener('touchend',e=>{if([...e.changedTouches].some(isPen))penDown=false});
+ink.addEventListener('touchcancel',e=>{if([...e.changedTouches].some(isPen))penDown=false});
+$('pn').onclick=()=>setMode('pn');$('er').onclick=()=>setMode('er');
+$('un').onclick=()=>{const s=INK.pop();if(s)s.el.remove()};$('cl').onclick=clearInk;
+document.querySelectorAll('.dot').forEach(b=>b.onclick=()=>{COL=b.dataset.c;document.querySelectorAll('.dot').forEach(x=>x.classList.toggle('on',x==b));if(MODE!='pn')setMode('pn')});
+function showBar(v){$('bar').style.display=v?'flex':'none';$('bar2').style.display=v?'none':'flex';if(!v&&MODE)setMode(MODE)}
+$('hb').onclick=()=>showBar(false);$('sb').onclick=()=>showBar(true);
+if(ld('lg')=='en')LG='en';ui();
+</script></body></html>
