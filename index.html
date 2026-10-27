@@ -65,6 +65,16 @@ margin:0 auto;
 padding:0 16px 90px;
 }
 
+#ib{
+position:absolute;
+left:0;
+top:0;
+width:100%;
+height:100%;
+pointer-events:none;
+z-index:5;
+}
+
 #ink{
 position:absolute;
 left:0;
@@ -73,10 +83,9 @@ width:100%;
 height:100%;
 overflow:visible;
 pointer-events:none;
-z-index:5;
 }
 
-#ink.on{
+#ib.on{
 pointer-events:auto;
 touch-action:pan-x pan-y pinch-zoom;
 -webkit-user-select:none;
@@ -367,7 +376,7 @@ font-size:19px;
 </style></head><body>
 <div class="head"><h1 id="ti">Persamaan Linear</h1><div class="tools"><div class="seg" id="segzoom"><button type="button" id="zo" aria-label="Zoom out">−</button><button type="button" id="zv" aria-label="Reset zoom">100%</button><button type="button" id="zi" aria-label="Zoom in">+</button></div><div class="seg" id="seglang"><button type="button" data-v="ms">BM</button><button type="button" data-v="en">ENG</button></div></div></div>
 <main>
-<svg id="ink" xmlns="http://www.w3.org/2000/svg"></svg>
+<div id="ib"><svg id="ink" xmlns="http://www.w3.org/2000/svg"></svg></div>
 
 <div class="card">
 <div class="tabs"><button id="t0" class="on"></button><button id="t1"></button></div>
@@ -527,24 +536,24 @@ function zoom(v){ZM=Math.max(100,Math.min(200,v));document.querySelector('main')
 $('zi').onclick=()=>zoom(ZM+25);$('zo').onclick=()=>zoom(ZM-25);$('zv').onclick=()=>zoom(100);
 zoom(ZM);
 let INK=[],MODE=null,COL='#e53935',cur=null;
-const ink=$('ink'),NS='http://www.w3.org/2000/svg',mainEl=document.querySelector('main');
-function ipt(e){const r=mainEl.getBoundingClientRect(),k=ZM/100;return[(e.clientX-r.left)/k,(e.clientY-r.top)/k]}
+const ib=$('ib'),ink=$('ink'),NS='http://www.w3.org/2000/svg';
+function ipt(e){const k=ZM/100;let x=e.offsetX,y=e.offsetY;if(k!==1){const r=ib.getBoundingClientRect(),xv=e.clientX-r.left;if(Math.abs(x-xv)<Math.abs(x*k-xv)){x/=k;y/=k}}return[x,y]}
 function upd(s){let d='M'+s.p.map(a=>a[0].toFixed(1)+' '+a[1].toFixed(1)).join('L');if(s.p.length==1)d+='l0.1 0';s.el.setAttribute('d',d)}
 function erase(p){INK=INK.filter(s=>{const h=s.p.some(a=>Math.hypot(a[0]-p[0],a[1]-p[1])<12);if(h)s.el.remove();return!h})}
 function clearInk(){INK.forEach(s=>s.el.remove());INK=[]}
-function setMode(m){MODE=MODE==m?null:m;ink.classList.toggle('on',!!MODE);$('pn').classList.toggle('on',MODE=='pn');$('er').classList.toggle('on',MODE=='er')}
+function setMode(m){MODE=MODE==m?null:m;ib.classList.toggle('on',!!MODE);$('pn').classList.toggle('on',MODE=='pn');$('er').classList.toggle('on',MODE=='er')}
 let pid=null,penDown=false;
-ink.onpointerdown=e=>{if(!MODE||e.pointerType=='touch'||pid!==null)return;e.preventDefault();pid=e.pointerId;penDown=true;ink.setPointerCapture(e.pointerId);const p=ipt(e);
+ib.onpointerdown=e=>{if(!MODE||e.pointerType=='touch'||pid!==null)return;e.preventDefault();pid=e.pointerId;penDown=true;ib.setPointerCapture(e.pointerId);const p=ipt(e);
 if(MODE=='er'){cur='er';erase(p);return}
 const el=document.createElementNS(NS,'path');el.setAttribute('stroke',COL);el.setAttribute('stroke-width',3);ink.append(el);
 cur={p:[p],el};upd(cur);INK.push(cur)};
-ink.onpointermove=e=>{if(!cur||e.pointerId!==pid)return;const p=ipt(e);if(cur=='er')erase(p);else{cur.p.push(p);upd(cur)}};
-ink.onpointerup=ink.onpointercancel=e=>{if(e.pointerId!==pid)return;cur=null;pid=null;penDown=false};
+ib.onpointermove=e=>{if(!cur||e.pointerId!==pid)return;const p=ipt(e);if(cur=='er')erase(p);else{cur.p.push(p);upd(cur)}};
+ib.onpointerup=ib.onpointercancel=e=>{if(e.pointerId!==pid)return;cur=null;pid=null;penDown=false};
 const isPen=t=>t.touchType=='stylus';
-ink.addEventListener('touchstart',e=>{if(!MODE)return;if(penDown||[...e.changedTouches].some(isPen))e.preventDefault()},{passive:false});
-ink.addEventListener('touchmove',e=>{if(!MODE)return;if(penDown||[...e.changedTouches].some(isPen))e.preventDefault()},{passive:false});
-ink.addEventListener('touchend',e=>{if([...e.changedTouches].some(isPen))penDown=false});
-ink.addEventListener('touchcancel',e=>{if([...e.changedTouches].some(isPen))penDown=false});
+ib.addEventListener('touchstart',e=>{if(!MODE)return;if(penDown||[...e.changedTouches].some(isPen))e.preventDefault()},{passive:false});
+ib.addEventListener('touchmove',e=>{if(!MODE)return;if(penDown||[...e.changedTouches].some(isPen))e.preventDefault()},{passive:false});
+ib.addEventListener('touchend',e=>{if([...e.changedTouches].some(isPen))penDown=false});
+ib.addEventListener('touchcancel',e=>{if([...e.changedTouches].some(isPen))penDown=false});
 $('pn').onclick=()=>setMode('pn');$('er').onclick=()=>setMode('er');
 $('un').onclick=()=>{const s=INK.pop();if(s)s.el.remove()};$('cl').onclick=clearInk;
 document.querySelectorAll('.dot').forEach(b=>b.onclick=()=>{COL=b.dataset.c;document.querySelectorAll('.dot').forEach(x=>x.classList.toggle('on',x==b));if(MODE!='pn')setMode('pn')});
